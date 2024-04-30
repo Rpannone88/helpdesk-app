@@ -1,33 +1,54 @@
 const express = require('express');
+const pool = require('./db');
 const app = express();
 const port = 3000;
+const cors = require('cors');
 
-// Middleware to parse JSON bodies
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 app.use(express.json());
 
-// Route to create a new ticket
-app.post('/tickets', (req, res) => {
-  // Extract ticket data from request body
+app.post('/tickets', async (req, res) => {
   const { name, email, description } = req.body;
-
-  // TODO: Insert new ticket into database
-
-  // Send response
-  res.status(201).json({ message: 'Ticket created' });
+  try {
+    const newTicket = await pool.query(
+      "INSERT INTO tickets (name, email, description) VALUES ($1, $2, $3) RETURNING *",
+      [name, email, description]
+    );
+    res.status(201).json(newTicket.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-// Route to update an existing ticket
-app.put('/tickets/:id', (req, res) => {
-  // Extract ticket ID from URL parameters
+app.get('/tickets', async (req, res) => {
+  try {
+    const allTickets = await pool.query("SELECT * FROM tickets");
+    res.json(allTickets.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.put('/tickets/:id', async (req, res) => {
   const { id } = req.params;
-
-  // Extract updated ticket data from request body
   const { status } = req.body;
-
-  // TODO: Update ticket in database
-
-  // Send response
-  res.json({ message: 'Ticket updated' });
+  try {
+    const updateTicket = await pool.query(
+      "UPDATE tickets SET status = $1 WHERE id = $2 RETURNING *",
+      [status, id]
+    );
+    if (updateTicket.rows.length === 0) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+    res.json(updateTicket.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
