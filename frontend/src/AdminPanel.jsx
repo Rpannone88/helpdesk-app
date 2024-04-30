@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem } from '@mui/material';
 
-// Dummy data for tickets
-const tickets = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', description: 'Problem 1', status: 'new' },
-  { id: 2, name: 'Jane Doe', email: 'jane@example.com', description: 'Problem 2', status: 'in progress' },
-  // Add more tickets as needed
-];
-
 function AdminPanel() {
+  const [tickets, setTickets] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentTicket, setCurrentTicket] = useState(null);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/tickets');
+        setTickets(response.data);
+      } catch (error) {
+        console.error('Failed to fetch tickets:', error);
+      }
+    };
+
+    fetchTickets();
+  }, []);
 
   const handleClickOpen = (ticket) => {
     setCurrentTicket(ticket);
@@ -21,8 +29,32 @@ function AdminPanel() {
     setOpen(false);
   };
 
+  const handleStatusChange = (event) => {
+    setCurrentTicket(prev => ({ ...prev, status: event.target.value }));
+  };
+
+  const handleUpdate = async () => {
+    if (currentTicket) {
+      try {
+        const response = await axios.put(`http://localhost:3000/tickets/${currentTicket.id}`, {
+          status: currentTicket.status,
+        });
+        console.log(response.data);
+        alert('Ticket updated successfully!');
+        handleClose();
+        const updatedTickets = tickets.map(t =>
+          t.id === currentTicket.id ? { ...t, status: currentTicket.status } : t
+        );
+        setTickets(updatedTickets);
+      } catch (error) {
+        console.error('Failed to update ticket:', error);
+        alert('Failed to update the ticket. Please try again.');
+      }
+    }
+  };
+
   return (
-    <TableContainer component={Paper} >
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -53,10 +85,14 @@ function AdminPanel() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Update Ticket</DialogTitle>
         <DialogContent>
-          <TextField margin="dense" label="Name" type="text" fullWidth defaultValue={currentTicket?.name} />
-          <TextField margin="dense" label="Email" type="text" fullWidth defaultValue={currentTicket?.email} />
-          <TextField margin="dense" label="Description" type="text" fullWidth defaultValue={currentTicket?.description} />
-          <Select value={currentTicket?.status} fullWidth>
+          <TextField margin="dense" label="Name" type="text" fullWidth value={currentTicket?.name} disabled />
+          <TextField margin="dense" label="Email" type="text" fullWidth value={currentTicket?.email} disabled />
+          <TextField margin="dense" label="Description" type="text" fullWidth value={currentTicket?.description} disabled />
+          <Select
+            value={currentTicket?.status}
+            fullWidth
+            onChange={handleStatusChange}
+          >
             <MenuItem value={'new'}>New</MenuItem>
             <MenuItem value={'in progress'}>In Progress</MenuItem>
             <MenuItem value={'resolved'}>Resolved</MenuItem>
@@ -66,7 +102,7 @@ function AdminPanel() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleUpdate} color="primary">
             Update
           </Button>
         </DialogActions>
