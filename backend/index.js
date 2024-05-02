@@ -1,12 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const pool = require('./db');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const cors = require('cors');
 
-app.use(cors({
-  origin: 'http://localhost:5173'
-}));
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/tickets', async (req, res) => {
@@ -18,7 +21,7 @@ app.post('/tickets', async (req, res) => {
     );
     res.status(201).json(newTicket.rows[0]);
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -52,5 +55,5 @@ app.put('/tickets/:id', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+  console.log(`Server listening at ${port}`);
 });
