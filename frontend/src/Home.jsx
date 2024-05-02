@@ -3,6 +3,7 @@ import { Button, TextField, Container, Typography } from '@mui/material';
 import axios from 'axios';
 
 function Home() {
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,7 +21,7 @@ function Home() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/tickets', formData);
+      const response = await axios.post(apiUrl, formData);
       console.log(response.data);
       alert('Ticket submitted successfully!');
       setFormData({ name: '', email: '', description: '' });

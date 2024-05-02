@@ -6,11 +6,12 @@ function AdminPanel() {
   const [tickets, setTickets] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentTicket, setCurrentTicket] = useState(null);
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/tickets');
+        const response = await axios.get(`${apiUrl}/tickets`);
         setTickets(response.data);
       } catch (error) {
         console.error('Failed to fetch tickets:', error);
@@ -36,9 +37,9 @@ function AdminPanel() {
   const handleUpdate = async () => {
     if (currentTicket) {
       try {
-        const response = await axios.put(`http://localhost:3000/tickets/${currentTicket.id}`, {
+        const response = await axios.put(`${apiUrl}/tickets/${currentTicket.id}`, {
           status: currentTicket.status,
-        });
+      });
         console.log(response.data);
         alert('Ticket updated successfully!');
         handleClose();

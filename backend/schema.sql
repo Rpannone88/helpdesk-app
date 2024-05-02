@@ -1,7 +1,3 @@
-CREATE DATABASE helpdesk;
-
-\c helpdesk
-
 CREATE TABLE tickets (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
