@@ -3,8 +3,7 @@ import { Button, TextField, Container, Typography } from '@mui/material';
 import axios from 'axios';
 
 function Home() {
-  const apiUrl = process.env.REACT_APP_API_URL;
-  console.log("API URL: ", apiUrl)
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
   const [formData, setFormData] = useState({
     name: '',
     email: '',

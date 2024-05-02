@@ -6,7 +6,7 @@ function AdminPanel() {
   const [tickets, setTickets] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentTicket, setCurrentTicket] = useState(null);
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchTickets = async () => {
