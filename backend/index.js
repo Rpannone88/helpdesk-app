@@ -41,7 +41,7 @@ app.put('/tickets/:id', async (req, res) => {
       [status, id]
     );
     if (updateTicket.rows.length === 0) {
-      return res.status(404).json({ error: "Ticket not found" });
+      return res.status(404).json({ error: "Ticket(s) not found" });
     }
     res.json(updateTicket.rows[0]);
   } catch (err) {
