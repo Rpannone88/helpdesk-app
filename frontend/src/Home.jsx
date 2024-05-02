@@ -21,7 +21,7 @@ function Home() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(apiUrl, formData);
+      const response = await axios.post(`${apiUrl}/tickets`, formData);
       console.log(response.data);
       alert('Ticket submitted successfully!');
       setFormData({ name: '', email: '', description: '' });
