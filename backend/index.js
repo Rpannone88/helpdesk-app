@@ -6,7 +6,8 @@ const port = process.env.PORT || 3000;
 const cors = require('cors');
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: 'https://helpdesk-ej604kl7y-ryans-teams-projects.vercel.app',
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
