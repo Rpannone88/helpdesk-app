@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,8 @@
     "express": "^4.19.2",
     "pg": "^8.11.5",
     "pg-promise": "^11.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
