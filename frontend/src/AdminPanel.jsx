@@ -49,7 +49,7 @@ function AdminPanel() {
         setTickets(updatedTickets);
       } catch (error) {
         console.error('Failed to update ticket:', error);
-        alert('Failed to update the ticket. Please try again.');
+        alert('Failed updating the ticket, please try again.');
       }
     }
   };
