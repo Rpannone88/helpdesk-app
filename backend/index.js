@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'https://helpdesk-ej604kl7y-ryans-teams-projects.vercel.app',
+  origin: 'https://helpdesk-app-nu.vercel.app/',
   optionsSuccessStatus: 200
 };
 
